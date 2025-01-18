@@ -1,0 +1,31 @@
+name: CICD
+
+on:
+  push:
+    branches: 
+      -main
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source code
+        uses: actions/checkout@v3
+      - name: Login to Docker hub
+        run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
+      - name: Build and push Docker image
+        run: docker build -t abhinavm945/deploy-reactjd-frontendapp .
+      - name: Publish image to docker hub
+        run: docker push abhinavm945/deploy-reactjd-frontendapp:latest
+    
+  deploy:
+    needs: build
+    runs-on: aws-ec2
+    steps:
+      - name: Pull Image from docker hub
+        run: docker pull abhinavm945/deploy-reactjd-frontendapp:latest
+      - name: Delete Old Container
+        run: docker rm -f reactContainer
+      - name: Run docker conatiner
+        run: docker run -d -p 3000:80 --name reactContainer abhinavm945/deploy-reactjd-frontendapp
