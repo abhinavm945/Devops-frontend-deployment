@@ -36,5 +36,3 @@ jobs:
             script: |
               docker pull your-dockerhub-username/react-frontend:latest
               docker-compose up -d
-        debug: true
-
