@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile # Ensure the Dockerfile name matches exactly (case-sensitive)
+    ports:
+      - "80:80" # Expose port 80 for Nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf # Mount your custom Nginx configuration
